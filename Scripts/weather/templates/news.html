@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Latest News</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            text-align: center;
+        }
+        .news-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            max-width: 1200px;
+            margin: 50px auto;
+        }
+        .news-card {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .news-card img {
+            max-width: 100%;
+            border-radius: 10px;
+        }
+        .news-card h2 {
+            margin: 10px 0;
+        }
+        .news-card p {
+            text-align: left;
+        }
+        .news-card a {
+            text-decoration: none;
+            color: #1e90ff;
+        }
+    </style>
+</head>
+<body>
+    <h1>Latest News</h1>
+    <div class="news-container">
+        {% for article in articles %}
+        <div class="news-card">
+            {% if article.urlToImage %}
+            <img src="{{ article.urlToImage }}" alt="News Image">
+            {% endif %}
+            <h2>{{ article.title }}</h2>
+            <p>{{ article.description }}</p>
+            <a href="{{ article.url }}" target="_blank">Read more</a>
+        </div>
+        {% endfor %}
+    </div>
+</body>
+</html>

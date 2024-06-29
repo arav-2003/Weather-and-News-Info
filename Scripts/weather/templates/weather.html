@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Weather App</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f0f0f0;
+        }
+        .weather-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            max-width: 800px;
+            margin: 50px auto;
+        }
+        .weather-card {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .weather-card img {
+            width: 50px;
+        }
+        .weather-card h2 {
+            margin: 10px 0;
+        }
+        form {
+            margin: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Weather in {{ weather.city }}</h1>
+    <form method="get" action="">
+        <input type="text" name="city" placeholder="Enter city">
+        <button type="submit">Get Weather</button>
+    </form>
+    <div class="weather-container">
+        <div class="weather-card">
+            <h2>{{ weather.humidity }}%</h2>
+            <p>Humidity</p>
+        </div>
+        <div class="weather-card">
+            <img src="http://openweathermap.org/img/wn/{{ weather.icon }}@2x.png" alt="Weather icon">
+            <h2>{{ weather.temperature }}°C</h2>
+            <p>Temperature</p>
+        </div>
+        <div class="weather-card">
+            <h2>{{ weather.description }}</h2>
+            <p>description</p>
+        </div>
+        <div class="weather-card">
+            <h2>{{ weather.date|date:"Y-m-d" }}</h2>
+            <p>Date</p>
+        </div>
+        <div class="weather-card">
+            <h2 id="local-time">{{ weather.date|date:"H:i:s" }}</h2>
+            <p>Local Time</p>
+        </div>
+        <div class="weather-card">
+            <h2>{{ weather.air_condition }}</h2>
+            <p>Air Condition</p>
+        </div>
+    </div>
+    <script>
+        function updateTime(offset) {
+            const localTimeElement = document.getElementById('local-time');
+            setInterval(() => {
+                const now = new Date(new Date().getTime() + offset * 1000);
+                const hours = now.getUTCHours();
+                const minutes = now.getUTCMinutes();
+                const seconds = now.getUTCSeconds();
+                const ampm = hours >= 12 ? 'PM' : 'AM';
+                const formattedHours = hours % 12 || 12;
+                const formattedTime = formattedHours.toString().padStart(2, '0') + ':' + 
+                                      minutes.toString().padStart(2, '0') + ':' + 
+                                      seconds.toString().padStart(2, '0') + ' ' + ampm;
+                localTimeElement.textContent = now.getUTCFullYear() + '-' +
+                                               (now.getUTCMonth() + 1).toString().padStart(2, '0') + '-' +
+                                               now.getUTCDate().toString().padStart(2, '0') + ' ' +
+                                               formattedTime;
+            }, 1000);
+        }
+        const timezoneOffset = JSON.parse(document.getElementById('timezone-offset').textContent);
+        console.log("Timezone Offset:", timezoneOffset);
+        updateTime(timezoneOffset);
+    </script>
+    <script type="application/json" id="timezone-offset">{{ weather.timezone|json_script:"timezone-offset" }}</script>
+</body>
+</html>
